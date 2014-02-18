@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.markovLabs.lib.datastructures.cs.SimplePriorityQueue;
+import org.markovLabs.lib.datastructures.cs.FixedSimplePriorityQueue;
 
 /**
  * @author victor regalado 
@@ -48,17 +48,16 @@ public class StringPermutations {
 		}
 		letterSet=new Character[set.size()];
 		set.toArray(letterSet);
-		search('a'); //root can be any character
+		search(); 
 	}
 	
-	public void search(Character root){
+	public void search(){
 		int level=0;
-		SimplePriorityQueue<Character> open=new SimplePriorityQueue<Character>();
+		FixedSimplePriorityQueue<Character> open=new FixedSimplePriorityQueue<Character>(letterSet,height);
 		Deque<Character> closed=new ArrayDeque<Character>();
 		Character elem;
 		
-		open.addAll(level,children(root));
-		while(open.size()>0){
+		while(level>=0){
 			if((elem=open.peek(level))==null){
 				level--;
 				backtrack(closed.pollFirst());
@@ -66,9 +65,6 @@ public class StringPermutations {
 			}
 			if(!valid(elem))	continue;
 			level++;
-			if(level<height){
-				open.addAll(level, children(elem));
-			}
 			closed.addFirst(elem);
 			if(level==height){
 				actionHandler(closed);
@@ -77,11 +73,6 @@ public class StringPermutations {
 			}
 		}
 	}
-
-	protected Character[] children(Character node) {
-		return letterSet;
-	}
-
 
 	protected void actionHandler(Deque<Character> path) {
 		System.out.println(prnt(path));
@@ -98,8 +89,10 @@ public class StringPermutations {
 	
 
 	protected void backtrack(Character elem) {
-		Integer counter=multiplicity.get(elem);
-		multiplicity.put(elem,++counter);
+		if(elem!=null){
+			Integer counter=multiplicity.get(elem);
+			multiplicity.put(elem,++counter);
+		}
 	}
 	
 	public static void main(String[] s) {
