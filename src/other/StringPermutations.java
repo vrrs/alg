@@ -11,8 +11,9 @@ import java.util.Set;
 import org.markovLabs.lib.datastructures.cs.SimplePriorityQueue;
 
 /**
- * @author victor regalado Print all the permutations of a given string without
- *         caching previous computed results. This problem is given by AppNexus
+ * @author victor regalado 
+ * Print all the permutations of a given string without caching previous computed results. 
+ * This problem is given by AppNexus
  */
 public class StringPermutations {
 	private String word;
