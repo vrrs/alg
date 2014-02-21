@@ -21,6 +21,8 @@ import java.util.Scanner;
 *1<=K<=N
 *0<= number of candies in any packet <=109
 */
+
+//strategy: traverse sorted list of N. For every K elements choose rightmost and leftmost and find unfairness 
 public class AngryChildren {
 	private int[] elems;
 	private int[] edges;
