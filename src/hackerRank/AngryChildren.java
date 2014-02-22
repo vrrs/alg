@@ -19,9 +19,9 @@ import java.util.Scanner;
 
 //strategy: traverse sorted list of N. For every K elements choose rightmost and leftmost and find unfairness 
 public class AngryChildren {
-	private int[] elems;
-	private int width;
-	private int size;
+	private int[] elems; //the set
+	private int width; // cardinality of a valid subset
+	private int size; //cardinality of the set
 	
     public AngryChildren(int n, int k, int[] packets) {
     	this.elems=packets;
