@@ -1,4 +1,4 @@
-package hackerRank;
+package hackerRank.warmup;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -24,6 +24,7 @@ public class AngryChildren {
 	private int size; //cardinality of the set
 	
     public AngryChildren(int n, int k, int[] packets) {
+    	Arrays.sort(packets);
     	this.elems=packets;
     	this.size=n;
     	this.width=k;
@@ -44,13 +45,12 @@ public class AngryChildren {
 	public static void main(String[] args) {
         /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
 		Scanner scanner=new Scanner(System.in);
-    	int N=Integer.parseInt(scanner.next());
-    	int K=Integer.parseInt(scanner.next());
+    	int N=scanner.nextInt();
+    	int K=scanner.nextInt();
     	int[] packets=new int[N];
     	for(int i=0;i<N;i++)
-    		packets[i]=Integer.parseInt(scanner.next());
+    		packets[i]=scanner.nextInt();
     	scanner.close();
-    	Arrays.sort(packets);
     	AngryChildren solver=new AngryChildren(N,K,packets);
     	System.out.println(solver.solve());
 	}
