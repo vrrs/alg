@@ -5,7 +5,11 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
+/**
+ * Problem: Given an integer interval [i,j], find the maximum cycle-length of the collatz sequences in this interval. 
+ * 
+ * @author victor regalado
+ */
 public class MaxCycleLengthOfCollatzNumbersFinder {
 	
 	public int getMaxCycleLength(int i, int j){
