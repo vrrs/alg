@@ -8,7 +8,7 @@ public final class ArrayMaxFinder {
     int ub = ar.length - 1, lb = 0, cur, prev, next, i;
     while(lb < ub){
       if(ub - lb + 1 <= 2)  return Math.max(ar[lb], ar[ub]);
-      i = (ub - lb) / 2;
+      i = (ub + lb) / 2;
       cur = ar[i]; prev = ar[i - 1]; next = ar[i + 1];
       if((next > cur) && (cur > prev))  lb = i + 1;  // go to the right
         else  if((next < cur) && (cur < prev))  ub = i - 1;  // go to the left
