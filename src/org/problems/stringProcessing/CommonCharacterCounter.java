@@ -10,38 +10,28 @@ import java.util.Set;
 public class CommonCharacterCounter {
 	
 	public int getTotalOfCommonCharacters(String[] words){
-		if(words.length == 1)	return words[0].length();
-		Set<Character> intersection = intersectionOf(words[0].toCharArray(), words[1].toCharArray());
-		for(int i = 2; i < words.length; i++){
-			String word = words[i];
-			intersection = intersectionOf(intersection ,word.toCharArray());
-		}
-		return intersection.size();
+  		if(words.length <= 1)  {
+    			if (words[0] == null)  throw new NullPointerException("Array must contain at least one element.")
+    			return words[0].length();
+  		}
+  		Set<Character> temp = new HashSet<Character>();
+  		Set<Character> intersection = intersectionOf(copyOf(words[0], new HashSet<Character>()), 
+  								copyOf(words[1], temp));
+  		for(int i = 2; i < words.length; i++)
+    			intersection = intersectionOf(intersection, copyOf(words[i], temp));
+  		return intersection; 
 	}
 
-	private Set<Character> intersectionOf(char[] firstWordChars, char[] secondWordChars) {
-		Set<Character> intersection = new HashSet<Character>();
-		for(Character c : firstWordChars)	intersection.add(c);
-		return intersectionOf(intersection, secondWordChars);
+	private Set<Character> intersectionOf(Set<Character> s1, Set<Character> s2){
+  		s1.retainAll(s2);
+  		return s1;
 	}
 
-	private Set<Character> intersectionOf(Set<Character> intersection, char[] secondWordChars) {
-		char mark = getMark(secondWordChars);
-		for(int i = 0; i <  secondWordChars.length; i++)
-			if(!intersection.contains(secondWordChars[i]))
-				secondWordChars[i] = mark;
-		intersection.clear();
-		for(char c : secondWordChars)
-			if(c != mark)
-				intersection.add(c);
-		return intersection;
-	}
-
-	private char getMark(char[] chars){
-		char max = chars[0];
-		for(int i = 1; i< chars.length; i++)
-			if(max < chars[i])
-				max = chars[i];
-		return (char) ((int) max + 1);
+	private Set<Character> copyOf(String source, Set<Character> dest){
+  		if(dest == null)  throw new AssertionError("Parameter dest must be non-null.");
+  		dest.clear();
+  		for(Character c : source.toCharArray())
+    			dest.add(c);
+  		return dest;
 	}
 }
