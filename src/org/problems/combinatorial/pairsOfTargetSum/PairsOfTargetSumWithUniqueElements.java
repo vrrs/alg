@@ -1,3 +1,5 @@
+package org.problems.combinatorial.pairsOfTargetSum;
+
 import java.util.Set;
 import java.util.HashSet;
 /**
