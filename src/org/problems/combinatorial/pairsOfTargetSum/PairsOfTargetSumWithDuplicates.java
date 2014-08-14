@@ -1,3 +1,5 @@
+package org.problems.combinatorial.pairsOfTargetSum;
+
 import java.util.Map;
 import java.util.HashMap;
 /**
