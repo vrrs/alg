@@ -11,7 +11,7 @@ public class CommonCharacterCounter {
 	
 	public int getTotalOfCommonCharacters(String[] words){
   		if(words.length <= 1)  {
-    			if (words[0] == null)  throw new NullPointerException("Array must contain at least one element.")
+    			if (words[0] == null)  throw new NullPointerException("Array must contain at least one element.");
     			return words[0].length();
   		}
   		Set<Character> temp = new HashSet<Character>();
@@ -19,7 +19,7 @@ public class CommonCharacterCounter {
   								copyOf(words[1], temp));
   		for(int i = 2; i < words.length; i++)
     			intersection = intersectionOf(intersection, copyOf(words[i], temp));
-  		return intersection; 
+  		return intersection.size(); 
 	}
 
 	private Set<Character> intersectionOf(Set<Character> s1, Set<Character> s2){

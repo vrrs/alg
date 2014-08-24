@@ -1,6 +1,6 @@
 package org.problems.combinatorial.pairsOfTargetSum;
 
-public final PairsOfTargetSums{
+public final class PairsOfTargetSums{
   private PairsOfTargetSums(){}
   
   public PairsOfTargetSum newPrinterWithSupportForDuplicates(){

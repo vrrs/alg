@@ -1,3 +1,4 @@
+package org.problems.sorting;
 /**
 *   This class find the max of a list that has an increasing sequence of ints followed by a decreasing sequence.
 *   @author victor regalado
