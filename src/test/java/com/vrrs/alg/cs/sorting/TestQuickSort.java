@@ -9,17 +9,21 @@ import static org.assertj.core.api.Assertions.*;
 
 public class TestQuickSort {
 	
+	private static final List<Integer> ORDERED_LIST = ImmutableList.of(-4, -1, 1, 2, 5, 9, 9);
+	
 	@Test
 	public void testIterativeImplementation(){
-		Integer[] elems = {1, 5, 2, 9, -1, -4, 9};
-		List<Integer> actual = Lists.newArrayList(QuickSort.quickSort(elems, Integer::compare));
-		assertThat(actual).isEqualTo(ImmutableList.of(-4, -1, 1, 2, 5, 9, 9));
+		Integer[] unorderedList = {1, 5, 2, 9, -1, -4, 9};
+		QuickSort<Integer> sorter = new QuickSort<>(Integer::compare);
+		List<Integer> actualOrderedList = Lists.newArrayList(sorter.sortIteratively(unorderedList));
+		assertThat(actualOrderedList).isEqualTo(ORDERED_LIST);
 	}
 
 	@Test
 	public void testRecursiveImplementation(){
-		Integer[] elems = {1, 5, 2, 9, -1, -4, 9};
-		List<Integer> actual = Lists.newArrayList(QuickSort.recursiveQuickSort(elems, Integer::compare));
-		assertThat(actual).isEqualTo(ImmutableList.of(-4, -1, 1, 2, 5, 9, 9));
+		Integer[] unorderedList = {1, 5, 2, 9, -1, -4, 9};
+		QuickSort<Integer> sorter = new QuickSort<>(Integer::compare);
+		List<Integer> actualOrderedList = Lists.newArrayList(sorter.sortRecursively(unorderedList));
+		assertThat(actualOrderedList).isEqualTo(ORDERED_LIST);
 	}
 }

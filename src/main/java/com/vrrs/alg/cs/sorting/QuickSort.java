@@ -1,53 +1,58 @@
 package com.vrrs.alg.cs.sorting;
 
 import java.util.Comparator;
+import java.util.Deque;
 
-public class QuickSort {
+import com.google.common.collect.Queues;
+
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+
+public class QuickSort<T> {
 	
-	public static <T> T[] quickSort(T[] ar, Comparator<T> comparator){
-		int n = ar.length, size = n,  upperBound;	//size is the # of siblings selected at each level
-		if (n <= 1)		return ar;	
-		for(int lowerBound = 0; size > 0; ){
-			upperBound = lowerBound + size >= n ? n - 1 : lowerBound + size;
-			centralPivotPartition(ar, lowerBound, upperBound, comparator);
-			lowerBound = upperBound + 1; //select the next set of siblings
-			if(lowerBound >= n){
-				size /= 2;
-				lowerBound = 0;
-			}
-		}	
-		return ar;
+	private final Comparator<T> comparator;
+
+	public QuickSort(Comparator<T> comparator) {
+		this.comparator = comparator;
 	}
 	
-	public static <T> T[] recursiveQuickSort(T[] ar, Comparator<T> comparator){
-		return recursiveQuickSort(ar, 0, ar.length - 1, comparator);
-	}
-	
-	private static <T> T[] recursiveQuickSort(T[] ar, int lowerBound, int upperBound, Comparator<T> comparator){
-		if(upperBound > lowerBound){
-			int pivotIndex = centralPivotPartition(ar, lowerBound, upperBound, comparator);
-			recursiveQuickSort(ar, lowerBound, pivotIndex - 1, comparator);
-			recursiveQuickSort(ar, pivotIndex + 1, upperBound, comparator);
+	public T[] sortIteratively(T[] ar){
+		Deque<Tuple2<Integer, Integer>> boundQueue = Queues.newArrayDeque();
+		for(boundQueue.push(bound(0, ar.length - 1)); !boundQueue.isEmpty();) {
+			Tuple2<Integer, Integer> bound = boundQueue.poll();
+			int pivot = getCentralPivot(bound._1, bound._2);
+			pivot = partition(ar, bound._1, bound._2, pivot);
+			if((pivot - 1) - bound._1 + 1 > 1)	boundQueue.push(bound(bound._1, pivot - 1));
+			if(bound._2 - (pivot + 1) + 1 > 1)	boundQueue.push(bound(pivot + 1, bound._2));
 		}
 		return ar;
 	}
+	
+	private Tuple2<Integer, Integer> bound(int lowerBound, int upperBound) {
+		return Tuple.of(lowerBound, upperBound);
+	}
 
-	public static<T> int randomPivotPartition(T[] ar, int lowerBound, int upperBound, Comparator<T> comparator){
-		swap(ar, lowerBound, selectRandomPivot(lowerBound, upperBound));
-		return partition(ar, lowerBound, upperBound, comparator);
+	public T[] sortRecursively(T[] ar){
+		return recursiveQuickSort(ar, 0, ar.length - 1);
 	}
 	
-	public static<T> int centralPivotPartition(T[] ar, int lowerBound, int upperBound, Comparator<T> comparator){
-		swap(ar, lowerBound, selectCentralPivot(lowerBound, upperBound));
-		return partition(ar, lowerBound, upperBound, comparator);
+	private T[] recursiveQuickSort(T[] ar, int lowerBound, int upperBound){
+		if(upperBound > lowerBound){
+			int pivot = getCentralPivot(lowerBound, upperBound);
+			pivot = partition(ar, lowerBound, upperBound, pivot);
+			recursiveQuickSort(ar, lowerBound, pivot - 1);
+			recursiveQuickSort(ar, pivot + 1, upperBound);
+		}
+		return ar;
 	}
 	
-	private static int selectCentralPivot(int lowerBound, int upperBound){
-		return (upperBound - lowerBound + 1) / 2;
+	private int partition(T[] ar, int lowerBound, int upperBound, int pivot){
+		swap(ar, lowerBound, pivot);
+		return partition(ar, lowerBound, upperBound);
 	}
 	
-	private static int selectRandomPivot(int lowerBound, int upperBound){
-		return (int) ((upperBound - lowerBound + 1) * Math.random());
+	private int getCentralPivot(int lowerBound, int upperBound){
+		return (upperBound - lowerBound + 1) / 2 + lowerBound;
 	}
 	
 	/**
@@ -55,7 +60,7 @@ public class QuickSort {
 	 * @param ar T array of n elems
 	 * @return index j | for all i,k in [0,n), if i<=j<=k then ar[i] <= ar[j] <= ar[k]  
 	 */
-	private static<T> int partition(T[] ar, int lowerBound, int upperBound, Comparator<T> comparator){
+	private int partition(T[] ar, int lowerBound, int upperBound){
 		if(upperBound > lowerBound){
 			T pivot = ar[lowerBound];
 			int i = lowerBound + 1;
@@ -68,7 +73,7 @@ public class QuickSort {
 		return lowerBound;
 	}
 	
-	private static<T> void swap(T[] ar, int left, int right){
+	private void swap(T[] ar, int left, int right){
 		T temp = ar[left];
 		ar[left] = ar[right];
 		ar[right] = temp;
