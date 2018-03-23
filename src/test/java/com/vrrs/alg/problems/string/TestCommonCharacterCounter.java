@@ -1,4 +1,5 @@
 package com.vrrs.alg.problems.string;
+
 import org.junit.Test;
 
 import com.vrrs.alg.problems.string.CommonCharacterCounter;
