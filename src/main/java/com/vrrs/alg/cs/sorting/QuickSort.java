@@ -22,10 +22,14 @@ public class QuickSort<T> {
 			Tuple2<Integer, Integer> bound = boundQueue.poll();
 			int pivot = getCentralPivot(bound._1, bound._2);
 			pivot = partition(ar, bound._1, bound._2, pivot);
-			if((pivot - 1) - bound._1 + 1 > 1)	boundQueue.push(bound(bound._1, pivot - 1));
-			if(bound._2 - (pivot + 1) + 1 > 1)	boundQueue.push(bound(pivot + 1, bound._2));
+			if(getBoundLength(bound._1, pivot - 1) > 1)	boundQueue.push(bound(bound._1, pivot - 1));
+			if(getBoundLength(pivot + 1, bound._2) > 1)	boundQueue.push(bound(pivot + 1, bound._2));
 		}
 		return ar;
+	}
+	
+	private int getBoundLength(int lowerBound, int upperBound) {
+		return upperBound - lowerBound + 1;
 	}
 	
 	private Tuple2<Integer, Integer> bound(int lowerBound, int upperBound) {
