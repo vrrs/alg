@@ -7,15 +7,12 @@ import com.google.common.collect.Sets;
 
 public class Vertex <T> {
 	
-	enum Color {
-		WHITE, BLACK, RED, GRAY
-	}
 	private Color color = Color.WHITE;
 	private Interval interval = new Interval();
 	private Vertex<T> representative = this;
 	private final Set<Vertex<T>> parents; 
 	private final Set<Vertex<T>> children;
-	private final T item;
+	private T item;
 	private final Integer id;
 	
 	public Vertex(int id) {
@@ -49,6 +46,14 @@ public class Vertex <T> {
 
 	public T getItem() {
 		return item;
+	}
+	
+	public boolean isEmpty() {
+		return item == null;
+	}
+	
+	public void setItem(T item) {
+		this.item = item;
 	}
 	
 	@Override
