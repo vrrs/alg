@@ -8,6 +8,7 @@ public class BTNode <E>{
 	private Color color = Color.BLACK;
 	private E item;
 	private int height = 1;
+	private int label = 0;
 	
 	public BTNode(E item) {
 		this.item = item;
@@ -83,6 +84,14 @@ public class BTNode <E>{
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public int getLabel() {
+		return label;
+	}
+
+	public void setLabel(int label) {
+		this.label = label;
 	}
 
 }
