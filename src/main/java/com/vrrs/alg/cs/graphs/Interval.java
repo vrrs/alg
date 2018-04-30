@@ -2,8 +2,16 @@ package com.vrrs.alg.cs.graphs;
 
 public final class Interval {
 	
-	private int startTime = 0;
-	private int endTime = 0;
+	private int startTime;
+	private int endTime;
+	
+	public Interval(int startTime, int endTime) {
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
+	public Interval() {
+		this(0, 0);
+	}
 	
 	public int getStartTime() {
 		return startTime;
