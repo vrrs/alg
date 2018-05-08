@@ -45,7 +45,7 @@ public class SpiralMatrix {
 	private void traverse(int m, int n, Consumer<Tuple3<Integer, Integer, Integer>> func) {
 		int[] jDir = new int[] { 1, 0, -1, 0 };
 		int[] iDir = new int[] { 0, 1, 0, -1 };
-		boolean[][] visited = newVisited2dArray(n);
+		boolean[][] visited = new boolean[m][n];
 		Coord coord = new Coord(m, n);
 		for (int k = 0, dir = 0; k < m * n; k++) {
 			func.accept(Tuple.of(coord.i, coord.j, k));
@@ -57,12 +57,6 @@ public class SpiralMatrix {
 				coord.inc(iDir[dir], jDir[dir]);
 			}
 		}
-	}
-
-	private boolean[][] newVisited2dArray(int n) {
-		boolean [][] visited = new boolean[n][n];
-		for(int i = 0; i < n; i++) for(int j = 0; j < n; j++) visited[i][j] = false;
-		return visited;
 	}
 
 }

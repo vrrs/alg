@@ -65,7 +65,7 @@ public class Vertex <T> {
 	public boolean equals(Object other) {
 		if(other instanceof Vertex) {
 			Vertex<T> that = (Vertex<T>) other;
-			return that.id.equals(that.id);
+			return that.id.equals(this.id);
 		} else {
 			return false;
 		}
