@@ -1,8 +1,7 @@
 package com.vrrs.alg.problems.interview.bloomberg;
+
 import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
-
 import static org.assertj.core.api.Assertions.*;
 
 public class TestMaxProfitFinder {
