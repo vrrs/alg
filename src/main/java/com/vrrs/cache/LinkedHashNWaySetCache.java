@@ -25,7 +25,7 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	}
 
 	@Override
-	public Optional<V> get(K key) throws KeyNotFoundException {
+	public Optional<V> get(K key) {
 		// TODO Auto-generated method stub
 		return null;
 	}
