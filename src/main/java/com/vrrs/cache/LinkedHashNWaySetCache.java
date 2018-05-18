@@ -29,8 +29,16 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 
 	@Override
 	public Optional<V> get(K key) {
-		// TODO Auto-generated method stub
-		return null;
+		int index = indexMapper.getIndex(key, 
+				i -> entries[i] != null && entries[i].getKey().equals(key));
+		if(index == -1) {
+			return Optional.empty();
+		} else {
+			CacheEntry<K, V> entry = entries[index];
+			int set = indexMapper.getIndexOfSet(key);
+			setEntryAsMostRecent(set, entry);
+			return Optional.of(entry.getValue());
+		}
 	}
 
 	@Override
@@ -39,9 +47,13 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 		if(indexMapper.isSetFull(heads[set])) {
 			policy.apply(heads[set], entryEviction);
 		}
-		int index = indexMapper.getIndex(key, i -> entries[i] != null);
+		int index = indexMapper.getIndex(key, i -> entries[i] == null);
 		CacheEntry<K,V> entry = new CacheEntry<>(key, value, index);
 		entries[index] = entry;
+		setEntryAsMostRecent(set, entry);
+	}
+
+	private void setEntryAsMostRecent(int set, CacheEntry<K, V> entry) {
 		CacheEntry<K, V> tail = heads[set].getTail();
 		tail.setRight(entry);
 		entry.setLeft(tail);
