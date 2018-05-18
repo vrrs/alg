@@ -14,7 +14,7 @@ final class IndexMapper <K> {
 		
 	}
 	
-	public boolean isSetFull(K key) {
+	public <V> boolean isSetFull(CacheEntry<K, V> head) {
 		
 	}
 	
