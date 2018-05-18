@@ -33,7 +33,7 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	@Override
 	public void put(K key, V value) {
 		int set = indexMapper.getIndexOfSet(key);
-		if(indexMapper.isSetFull(key)) {
+		if(indexMapper.isSetFull(heads[set])) {
 			policy.apply(heads[set]);
 		}
 		int index = indexMapper.getIndex(key, i -> entries[i] != null);
