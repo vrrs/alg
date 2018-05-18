@@ -1,6 +1,7 @@
 package com.vrrs.cache;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	
@@ -8,6 +9,7 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	private final LinkedListHeader<K, V>[] heads;
 	private final EvictionPolicy policy;
 	private final IndexMapper<K> indexMapper;
+	private final Consumer<Integer> entryEviction;
 	
 	@SuppressWarnings("unchecked")
 	public LinkedHashNWaySetCache(int ways, int numOfEntries, EvictionPolicy policy) {
@@ -15,6 +17,7 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 		this.entries = new CacheEntry[numOfEntries];
 		this.heads = newHeadEntries(numOfEntries / ways);
 		this.indexMapper = new IndexMapper<>(ways);
+		this.entryEviction = i -> entries[i] = null;
 	}
 
 	private LinkedListHeader<K, V>[] newHeadEntries(int size) {
@@ -34,7 +37,7 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	public void put(K key, V value) {
 		int set = indexMapper.getIndexOfSet(key);
 		if(indexMapper.isSetFull(heads[set])) {
-			policy.apply(heads[set]);
+			policy.apply(heads[set], entryEviction);
 		}
 		int index = indexMapper.getIndex(key, i -> entries[i] != null);
 		CacheEntry<K,V> entry = new CacheEntry<>(key, value, index);
