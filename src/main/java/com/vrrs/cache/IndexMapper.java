@@ -14,7 +14,7 @@ final class IndexMapper <K> {
 		
 	}
 	
-	public <V> boolean isSetFull(CacheEntry<K, V> head) {
+	public <V> boolean isSetFull(LinkedListHeader<K, V> head) {
 		
 	}
 	

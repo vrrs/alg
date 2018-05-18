@@ -5,7 +5,7 @@ import java.util.Optional;
 final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	
 	private final CacheEntry<K, V>[] entries;
-	private final CacheEntry<K, V>[] heads;
+	private final LinkedListHeader<K, V>[] heads;
 	private final EvictionPolicy policy;
 	private final IndexMapper<K> indexMapper;
 	
@@ -17,10 +17,10 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 		this.indexMapper = new IndexMapper<>(ways);
 	}
 
-	@SuppressWarnings("unchecked")
-	private CacheEntry<K, V>[] newHeadEntries(int size) {
-		CacheEntry<K, V>[] headEntries = new CacheEntry[size];
-		for(int i = 0; i < size; i++) headEntries[i] = CacheEntry.newValueLessEntry();
+	private LinkedListHeader<K, V>[] newHeadEntries(int size) {
+		@SuppressWarnings("unchecked")
+		LinkedListHeader<K, V>[] headEntries = new LinkedListHeader[size];
+		for(int i = 0; i < size; i++) headEntries[i] = new LinkedListHeader<>();
 		return headEntries;
 	}
 
