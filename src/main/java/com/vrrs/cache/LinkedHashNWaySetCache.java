@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	
 	private final CacheEntry<K, V>[] entries;
-	private final LinkedListHeader<K, V>[] heads;
+	private final LinkedListHeader<K, V>[] headers;
 	private final EvictionPolicy policy;
 	private final IndexMapper<K, V> indexMapper;
 	private final Consumer<Integer> entryEviction;
@@ -16,16 +16,16 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	public LinkedHashNWaySetCache(int ways, int numOfEntries, EvictionPolicy policy, IndexMapper<K, V> indexMapper) {
 		this.policy = policy;
 		this.entries = new CacheEntry[numOfEntries];
-		this.heads = newHeadEntries(numOfEntries / ways);
+		this.headers = newLinkedListHeaders(numOfEntries / ways);
 		this.indexMapper = indexMapper;
 		this.entryEviction = i -> entries[i] = null;
 	}
 
-	private LinkedListHeader<K, V>[] newHeadEntries(int size) {
+	private LinkedListHeader<K, V>[] newLinkedListHeaders(int size) {
 		@SuppressWarnings("unchecked")
-		LinkedListHeader<K, V>[] headEntries = new LinkedListHeader[size];
-		IntStream.range(0, size).forEach(i -> headEntries[i] = new LinkedListHeader<>());
-		return headEntries;
+		LinkedListHeader<K, V>[] headers = new LinkedListHeader[size];
+		IntStream.range(0, size).forEach(i -> headers[i] = new LinkedListHeader<>());
+		return headers;
 	}
 
 	@Override
@@ -41,8 +41,8 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	@Override
 	public void put(K key, V value) {
 		int set = indexMapper.getKeySetIndex(key);
-		if (indexMapper.isSetFull(heads[set])) {
-			policy.apply(heads[set], entryEviction);
+		if (indexMapper.isSetFull(headers[set])) {
+			policy.apply(headers[set], entryEviction);
 		}
 		indexMapper.findEntryIndex(key, i -> entries[i] == null)
 			.map(i -> new CacheEntry<>(key, value, i))
@@ -57,14 +57,14 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	}
 
 	private CacheEntry<K, V> getAndSetEntryAsMostRecent(int set, CacheEntry<K, V> entry) {
-		CacheEntry<K, V> tail = heads[set].getTail();
+		CacheEntry<K, V> tail = headers[set].getTail();
 		if(tail != null) {
 			tail.setRight(entry);
 			entry.setLeft(tail);	
 		} else {
-			heads[set].setHead(entry);	
+			headers[set].setHead(entry);	
 		}
-		heads[set].setTail(entry);
+		headers[set].setTail(entry);
 		return entry;
 	}
 
