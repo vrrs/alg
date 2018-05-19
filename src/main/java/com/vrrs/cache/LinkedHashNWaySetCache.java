@@ -31,7 +31,7 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	@Override
 	public Optional<V> get(K key) {
 		int set = indexMapper.getKeySetIndex(key);
-		return indexMapper.findIndex(key, i -> 
+		return indexMapper.findEntryIndex(key, i -> 
 					entries[i] != null && entries[i].getKey().equals(key))
 				.map(i -> entries[i])
 				.map(entry -> getAndSetEntryAsMostRecent(set, entry))
@@ -41,10 +41,10 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	@Override
 	public void put(K key, V value) {
 		int set = indexMapper.getKeySetIndex(key);
-		if (!indexMapper.isEmpty(heads[set])) {
+		if (indexMapper.isSetFull(heads[set])) {
 			policy.apply(heads[set], entryEviction);
 		}
-		indexMapper.findIndex(key, i -> entries[i] == null)
+		indexMapper.findEntryIndex(key, i -> entries[i] == null)
 			.map(i -> new CacheEntry<>(key, value, i))
 			.map(entry -> getAndSetEntryAsMostRecent(set, entry))
 			.map(this::getAndSetEntry)
