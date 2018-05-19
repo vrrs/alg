@@ -3,6 +3,10 @@ package com.vrrs.cache;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
+
 interface IndexMapper<K, V> {
 
 	boolean isSetFull(LinkedListHeader<K, V> head);
@@ -49,11 +53,30 @@ interface IndexMapper<K, V> {
 		}
 		
 		public int getKeySetIndex(K key) {
-			return 0;
+			return getConsistentHash(key, numOfSets);
+		}
+		
+		private int getConsistentHash(K key, int numOfBuckets) {
+			HashFunction hf = Hashing.sha512();
+			HashCode hc = hf.newHasher()
+			       .putInt(key.hashCode())
+			       .hash();
+			return Hashing.consistentHash(hc, numOfBuckets);
 		}
 
 		public Optional<Integer> findEntryIndex(K key, Predicate<Integer> stopCondition) {
-			return null;
+			int startIndex = getKeySetIndex(key)*setCapacity;
+			Predicate<Integer> offsetStopCondition = offset -> stopCondition.test(startIndex + offset);
+			return findOffset(key, offsetStopCondition).map(offset -> startIndex + offset);
+		}
+
+		private Optional<Integer> findOffset(K key, Predicate<Integer> stopCondition) {
+			int hash = getConsistentHash(key, setCapacity);
+			for(int i = 0; i < setCapacity; i++) {
+				int offset = (hash + i + i*i) % setCapacity;
+				if(stopCondition.test(offset)) return Optional.of(offset);
+			}
+			return Optional.empty();
 		}
 	}
 }

@@ -58,6 +58,7 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 
 	private CacheEntry<K, V> getAndSetEntryAsMostRecent(int set, CacheEntry<K, V> entry) {
 		CacheEntry<K, V> tail = headers[set].getTail();
+		if(tail == entry) return entry;
 		if(tail != null) {
 			tail.setRight(entry);
 			CacheEntry<K, V> left = entry.getLeft();
