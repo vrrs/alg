@@ -69,6 +69,7 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 			headers[set].setHead(entry);	
 		}
 		headers[set].setTail(entry);
+		entry.setRight(null);
 		return entry;
 	}
 
