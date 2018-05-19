@@ -5,45 +5,37 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class LinkedHashNWayCacheBuilder<K, V> implements Supplier<Cache<K, V>> {
+import com.vrrs.cache.Cache.CacheEvictionPolicy;
 
-	private static final Logger LOG = LoggerFactory.getLogger(LinkedHashNWayCacheBuilder.class);
-	
-	public enum CacheEvictionPolicy {
-		LRU(new EvictionPolicy.LRUEviction()),
-		MRU(new EvictionPolicy.MRUEviction());
-		
-		private final EvictionPolicy policy;
-		
-		CacheEvictionPolicy(EvictionPolicy policy){
-			this.policy = policy;
-		}
-		public EvictionPolicy getPolicy() {
-			return policy;
-		}
-	}
+public final class LinkedHashNWaySetCacheBuilder<K, V> implements Supplier<Cache<K, V>> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(LinkedHashNWaySetCacheBuilder.class);
 	
 	private int numOfWays = 3;
 	private int numOfEntries = 3000;
-	private CacheEvictionPolicy policy;
+	private EvictionPolicy policy;
 	private IndexMapper<K, V> indexMapper;
 	
-	public LinkedHashNWayCacheBuilder<K, V> withNumOfWays(int numOfWays) {
+	public LinkedHashNWaySetCacheBuilder<K, V> withNumOfWays(int numOfWays) {
 		this.numOfWays = numOfWays;
 		return this;
 	}
 
-	public LinkedHashNWayCacheBuilder<K, V> withNumOfEntries(int numOfEntries) {
+	public LinkedHashNWaySetCacheBuilder<K, V> withNumOfEntries(int numOfEntries) {
 		this.numOfEntries = numOfEntries;
 		return this;
 	}
 
-	public LinkedHashNWayCacheBuilder<K, V> withPolicy(CacheEvictionPolicy cacheEvictionPolicy) {
+	public LinkedHashNWaySetCacheBuilder<K, V> withPolicy(CacheEvictionPolicy cacheEvictionPolicy) {
+		this.policy = cacheEvictionPolicy.getPolicy();
+		return this;
+	}
+	public LinkedHashNWaySetCacheBuilder<K, V> withPolicy(EvictionPolicy cacheEvictionPolicy) {
 		this.policy = cacheEvictionPolicy;
 		return this;
 	}
 
-	LinkedHashNWayCacheBuilder<K, V> withIndexMapper(IndexMapper<K, V> indexMapper) {
+	LinkedHashNWaySetCacheBuilder<K, V> withIndexMapper(IndexMapper<K, V> indexMapper) {
 		this.indexMapper = indexMapper;
 		return this;
 	}
@@ -62,7 +54,7 @@ public final class LinkedHashNWayCacheBuilder<K, V> implements Supplier<Cache<K,
 		LOG.info("Built a LinkedHashNWaySetCache with uniform number of entries, " + uniformNumOfEntries + ", given "
 				+ numOfEntries + " with " + numOfWays + " entries per set using " + policy
 				+ " entry replacement policy.");
-		return new LinkedHashNWaySetCache<>(numOfWays, uniformNumOfEntries, policy.getPolicy(), indexMapper);
+		return new LinkedHashNWaySetCache<>(numOfWays, uniformNumOfEntries, policy, indexMapper);
 	}
 	
 	private int getUniformNumOfEntries(int numOfEntries, int numOfWays) {
@@ -73,8 +65,8 @@ public final class LinkedHashNWayCacheBuilder<K, V> implements Supplier<Cache<K,
 		return numOfEntries;
 	}
 
-	public static <K, V> LinkedHashNWayCacheBuilder<K, V> newBuilder(){
-		return new LinkedHashNWayCacheBuilder<>();
+	public static <K, V> LinkedHashNWaySetCacheBuilder<K, V> newBuilder(){
+		return new LinkedHashNWaySetCacheBuilder<>();
 	}
 
 }

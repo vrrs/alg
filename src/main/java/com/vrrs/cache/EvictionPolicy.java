@@ -18,6 +18,10 @@ public interface EvictionPolicy {
 			if(right != null) right.setLeft(null);
 			eviction.accept(head.getIndex());
 		}
+		@Override
+		public String toString() {
+			return "LRU";
+		}
 	}
 	
 	static final class MRUEviction implements EvictionPolicy {
@@ -30,6 +34,10 @@ public interface EvictionPolicy {
 			if(tail == header.getHead()) header.setHead(left);
 			if(left != null) left.setRight(null);
 			eviction.accept(tail.getIndex());
+		}
+		@Override
+		public String toString() {
+			return "MRU";
 		}
 
 	}
