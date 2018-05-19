@@ -43,7 +43,7 @@ public final class LinkedHashNWaySetCacheBuilder<K, V> implements Supplier<Cache
 			throw new IllegalArgumentException(
 					"Number of ways and capacity must be positive int and number of ways must be <= capacity.");
 		}
-		if (indexMapper == null) indexMapper = new IndexMapper.MultiHashIndexMapper<>(numOfWays, capacity);
+		if (indexMapper == null) indexMapper = new HashWithChainingIndexMapper<>(numOfWays, capacity);
 		return new LinkedHashNWaySetCache<>(policy, indexMapper);
 	}
 	
