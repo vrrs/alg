@@ -23,8 +23,8 @@ public final class LinkedHashNWayCacheBuilder<K, V> implements Supplier<Cache<K,
 		}
 	}
 	
-	private int numOfWays;
-	private int numOfEntries;
+	private int numOfWays = 3;
+	private int numOfEntries = 3000;
 	private CacheEvictionPolicy policy;
 	private IndexMapper<K, V> indexMapper;
 	
