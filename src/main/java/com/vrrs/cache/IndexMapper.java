@@ -12,28 +12,36 @@ interface IndexMapper<K, V> {
 	int getNumOfEntries();
 
 	static final class MultiHashIndexMapper<K, V> implements IndexMapper<K, V> {
+		
+		private static final double INVERSE_OF_LOAD_FACTOR = 1.34;
+		
+		private final int setCapacity;
+		private final int numOfSets;
+		private final int numOfEntries;
 		private final int ways;
-		private final int capacity;
 
 		public MultiHashIndexMapper(int ways, int capacity) {
+			this.setCapacity = (int) Math.ceil(INVERSE_OF_LOAD_FACTOR * ways);
+			this.numOfSets = getNumOfSets(ways, capacity);
+			this.numOfEntries = this.setCapacity * this.numOfSets;
 			this.ways = ways;
-			this.capacity = capacity;
 		}
 		
 		public int getNumOfSets() {
-			
+			return numOfSets;
 		}
 		
 		public int getNumOfEntries() {
-			
+			return numOfEntries;
 		}
 		
-		private int getUniformNumOfEntries(int numOfEntries, int numOfWays) {
-			int remainder = numOfEntries % numOfWays;
+		private int getNumOfSets(int ways, int capacity) {
+			int remainder = capacity % ways;
+			int numOfSets = capacity / ways;
 			if(remainder > 0) {
-				numOfEntries -= remainder; 
+				numOfSets++;
 			}
-			return numOfEntries;
+			return numOfSets;
 		}
 
 		public boolean isSetFull(LinkedListHeader<K, V> head) {
