@@ -17,6 +17,8 @@ public interface EvictionPolicy {
 			if(head == header.getTail()) header.setTail(right);
 			if(right != null) right.setLeft(null);
 			eviction.accept(head.getIndex());
+			int listSize = header.getListSize();
+			header.setListSize(++listSize);
 		}
 		@Override
 		public String toString() {
@@ -34,6 +36,8 @@ public interface EvictionPolicy {
 			if(tail == header.getHead()) header.setHead(left);
 			if(left != null) left.setRight(null);
 			eviction.accept(tail.getIndex());
+			int listSize = header.getListSize();
+			header.setListSize(++listSize);
 		}
 		@Override
 		public String toString() {

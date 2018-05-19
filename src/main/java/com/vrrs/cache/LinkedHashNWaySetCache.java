@@ -47,12 +47,14 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 		indexMapper.findEntryIndex(key, i -> entries[i] == null)
 			.map(i -> new CacheEntry<>(key, value, i))
 			.map(entry -> getAndSetEntryAsMostRecent(set, entry))
-			.map(this::getAndSetEntry)
+			.map(entry -> getAndSetEntry(set, entry))
 			.get();
 	}
 	
-	private CacheEntry<K,V> getAndSetEntry(CacheEntry<K,V> entry){
+	private CacheEntry<K,V> getAndSetEntry(int set, CacheEntry<K,V> entry){
 		entries[entry.getIndex()] = entry;
+		int listSize = headers[set].getListSize();
+		headers[set].setListSize(++listSize);
 		return entry;
 	}
 
