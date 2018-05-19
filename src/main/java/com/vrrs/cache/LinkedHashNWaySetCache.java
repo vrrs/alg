@@ -13,10 +13,10 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 	private final Consumer<Integer> entryEviction;
 	
 	@SuppressWarnings("unchecked")
-	public LinkedHashNWaySetCache(int ways, int numOfEntries, EvictionPolicy policy, IndexMapper<K, V> indexMapper) {
+	public LinkedHashNWaySetCache(EvictionPolicy policy, IndexMapper<K, V> indexMapper) {
 		this.policy = policy;
-		this.entries = new CacheEntry[numOfEntries];
-		this.headers = newLinkedListHeaders(numOfEntries / ways);
+		this.entries = new CacheEntry[indexMapper.getNumOfEntries()];
+		this.headers = newLinkedListHeaders(indexMapper.getNumOfSets());
 		this.indexMapper = indexMapper;
 		this.entryEviction = i -> entries[i] = null;
 	}
@@ -60,6 +60,10 @@ final class LinkedHashNWaySetCache <K, V> implements Cache <K,V> {
 		CacheEntry<K, V> tail = headers[set].getTail();
 		if(tail != null) {
 			tail.setRight(entry);
+			CacheEntry<K, V> left = entry.getLeft();
+			CacheEntry<K, V> right = entry.getRight();
+			if(left != null) left.setRight(right);
+			if(right != null) right.setLeft(left);
 			entry.setLeft(tail);	
 		} else {
 			headers[set].setHead(entry);	

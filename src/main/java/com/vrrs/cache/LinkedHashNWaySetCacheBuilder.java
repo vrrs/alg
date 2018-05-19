@@ -1,18 +1,12 @@
 package com.vrrs.cache;
 
 import java.util.function.Supplier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vrrs.cache.Cache.CacheEvictionPolicy;
 
 public final class LinkedHashNWaySetCacheBuilder<K, V> implements Supplier<Cache<K, V>> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(LinkedHashNWaySetCacheBuilder.class);
-	
 	private int numOfWays = 3;
-	private int numOfEntries = 3000;
+	private int capacity = 3000;
 	private EvictionPolicy policy;
 	private IndexMapper<K, V> indexMapper;
 	
@@ -21,8 +15,8 @@ public final class LinkedHashNWaySetCacheBuilder<K, V> implements Supplier<Cache
 		return this;
 	}
 
-	public LinkedHashNWaySetCacheBuilder<K, V> withNumOfEntries(int numOfEntries) {
-		this.numOfEntries = numOfEntries;
+	public LinkedHashNWaySetCacheBuilder<K, V> withCapacity(int capacity) {
+		this.capacity = capacity;
 		return this;
 	}
 
@@ -45,26 +39,14 @@ public final class LinkedHashNWaySetCacheBuilder<K, V> implements Supplier<Cache
 		if (policy == null) {
 			throw new IllegalArgumentException("Cache eviction policy must be set.");
 		}
-		if (numOfWays <= 0 || numOfEntries <= 0 || numOfWays > numOfEntries) {
+		if (numOfWays <= 0 || capacity <= 0 || numOfWays > capacity) {
 			throw new IllegalArgumentException(
-					"Number of ways and entries must be positive int and number of ways must be <= number of entries.");
+					"Number of ways and capacity must be positive int and number of ways must be <= capacity.");
 		}
-		int uniformNumOfEntries = getUniformNumOfEntries(numOfEntries, numOfWays);
-		if (indexMapper == null) indexMapper = new IndexMapper.MultiHashIndexMapper<>(numOfWays);
-		LOG.info("Built a LinkedHashNWaySetCache with uniform number of entries, " + uniformNumOfEntries + ", given "
-				+ numOfEntries + " with " + numOfWays + " entries per set using " + policy
-				+ " entry replacement policy.");
-		return new LinkedHashNWaySetCache<>(numOfWays, uniformNumOfEntries, policy, indexMapper);
+		if (indexMapper == null) indexMapper = new IndexMapper.MultiHashIndexMapper<>(numOfWays, capacity);
+		return new LinkedHashNWaySetCache<>(policy, indexMapper);
 	}
 	
-	private int getUniformNumOfEntries(int numOfEntries, int numOfWays) {
-		int remainder = numOfEntries % numOfWays;
-		if(remainder > 0) {
-			numOfEntries -= remainder; 
-		}
-		return numOfEntries;
-	}
-
 	public static <K, V> LinkedHashNWaySetCacheBuilder<K, V> newBuilder(){
 		return new LinkedHashNWaySetCacheBuilder<>();
 	}
