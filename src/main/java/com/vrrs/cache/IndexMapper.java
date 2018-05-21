@@ -1,25 +1,13 @@
 package com.vrrs.cache;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
-final class IndexMapper <K> {
-	
-	private final int ways;
+interface IndexMapper<K, V> {
 
-	public IndexMapper(int ways) {
-		this.ways = ways;
-	}
-	
-	public int getIndexOfSet(K key) {
-		
-	}
-	
-	public <V> boolean isSetFull(CacheEntry<K, V> head) {
-		
-	}
-	
-	public int getIndex(K key, Predicate<Integer> isTaken) {
-		
-	}
-
+	boolean isSetFull(LinkedListHeader<K, V> head);
+	int getKeySetIndex(K key);
+	Optional<Integer> findEntryIndex(K key, Predicate<Integer> stopCondition);
+	int getNumOfSets();
+	int getNumOfEntries();
 }
