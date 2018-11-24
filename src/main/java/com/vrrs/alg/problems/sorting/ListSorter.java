@@ -11,7 +11,7 @@ public class ListSorter {
   }
 
   private List<Integer> sortKList(int lb, int ub, List<List<Integer>> lists) {
-    if (lb > ub) {
+    if (lb >= ub) {
       return lists.get(lb);
     }
     int mid = (lb + ub) / 2;
